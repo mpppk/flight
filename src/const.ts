@@ -23,14 +23,26 @@ const seatRankAdditionalRate: Record<SeatRank, number> = {
   First: 0.5,
 };
 
-export const Airport = z.union([z.literal("羽田"), z.literal("那覇")]);
+export const Airport = z.union([
+  z.literal("羽田"),
+  z.literal("那覇"),
+  z.literal("新千歳"),
+]);
 export const airports = Airport.options.map((x) => x.value);
 export type Airport = z.infer<typeof Airport>;
 
+export const airportRoutes: [Airport, Airport, number][] = [
+  ["羽田", "那覇", 984], // airport1, airport2, mile
+  ["羽田", "新千歳", 510],
+];
+
 const FOPs = (() => {
   const m = new Map<`${Airport}-${Airport}`, number>();
-  m.set("羽田-那覇", 984 * 2);
-  m.set("那覇-羽田", 984 * 2);
+  const set = (a1: Airport, a2: Airport, mile: number) => {
+    m.set(`${a1}-${a2}`, mile * 2);
+    m.set(`${a2}-${a1}`, mile * 2);
+  };
+  airportRoutes.forEach(([a1, a2, mile]) => set(a1, a2, mile));
   return m;
 })();
 

@@ -1,5 +1,12 @@
-import { attribute as _, Digraph, Node, Edge, toDot } from "ts-graphviz";
-import { FareType, getFOP, SeatRank } from "./const.ts";
+import { attribute as _, Node, Edge, toDot, Graph } from "ts-graphviz";
+import {
+  Airport,
+  airportRoutes,
+  airports,
+  FareType,
+  getFOP,
+  SeatRank,
+} from "./const.ts";
 import Graphviz from "graphviz-react";
 
 export const AirportGraph = (props: {
@@ -12,14 +19,22 @@ export const AirportGraph = (props: {
 };
 
 const newAirportGraph = (seatRank: SeatRank, fareType: FareType) => {
-  const G = new Digraph();
-  const hnd = new Node("羽田");
-  const oka = new Node("那覇");
-  const edge = new Edge([hnd, oka], {
-    [_.label]: getFOP(hnd.id, oka.id, seatRank, fareType).toString(),
+  const G = new Graph();
+  const nodes = airports.reduce((m, airport) => {
+    m[airport] = new Node(airport);
+    return m;
+  }, {} as Record<Airport, Node>);
+  const newEdge = (
+    node1: Node,
+    node2: Node,
+    seatRank: SeatRank,
+    fareType: FareType
+  ) => {
+    const fop = getFOP(node1.id, node2.id, seatRank, fareType);
+    return new Edge([node1, node2], { [_.label]: fop.toString() });
+  };
+  airportRoutes.forEach((route) => {
+    G.addEdge(newEdge(nodes[route[0]], nodes[route[1]], seatRank, fareType));
   });
-  G.addNode(hnd);
-  G.addNode(oka);
-  G.addEdge(edge);
   return G;
 };
