@@ -31,13 +31,13 @@ export const AirportSelector = (props: {
   onClick: (seatName: SeatRank) => void;
 }) => {
   return (
-    <div className="dropdown">
+    <div className="dropdown dropdown-right">
       <label tabIndex={0} className="btn m-1">
         {props.currentRank}
       </label>
       <ul
         tabIndex={0}
-        className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+        className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-32"
       >
         <SeatRankList names={props.seatRanks} onClick={props.onClick} />
       </ul>
