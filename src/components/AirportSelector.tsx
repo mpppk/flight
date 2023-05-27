@@ -1,4 +1,4 @@
-import { Airport, airports } from "./const.ts";
+import { Airport, airports } from "../const.ts";
 
 const AirportItem = (props: {
   name: Airport;

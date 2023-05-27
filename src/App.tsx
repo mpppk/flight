@@ -1,11 +1,11 @@
 import { FareType, SeatRank } from "./const.ts";
 import React from "react";
-import { SeatRankSelector } from "./SeatRankSelector.tsx";
-import { AirportGraph } from "./AirportGraph.tsx";
+import { SeatRankSelector } from "./components/SeatRankSelector.tsx";
+import { AirportGraph } from "./components/AirportGraph.tsx";
 import { useWindowSize } from "./hooks.ts";
-import { FareTypeSelector } from "./FareTypeSelector.tsx";
-import { AirportSelector } from "./AirportSelector.tsx";
-import { EditablePrice } from "./EditablePrice.tsx";
+import { FareTypeSelector } from "./components/FareTypeSelector.tsx";
+import { AirportSelector } from "./components/AirportSelector.tsx";
+import { EditablePrice } from "./components/EditablePrice.tsx";
 
 const EditIcon = () => {
   return (

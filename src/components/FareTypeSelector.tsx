@@ -1,4 +1,4 @@
-import { FareType, fareTypes } from "./const.ts";
+import { FareType, fareTypes } from "../const.ts";
 
 const FareRateItem = (props: {
   fareType: FareType;

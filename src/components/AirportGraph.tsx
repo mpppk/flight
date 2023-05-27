@@ -6,7 +6,7 @@ import {
   FareType,
   getFOP,
   SeatRank,
-} from "./const.ts";
+} from "../const.ts";
 import Graphviz from "graphviz-react";
 
 export const AirportGraph = (props: {
