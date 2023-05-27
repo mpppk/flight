@@ -15,7 +15,15 @@ export const AirportGraph = (props: {
   width: number;
 }) => {
   const dot = toDot(newAirportGraph(props.seatRank, props.fareType));
-  return <Graphviz dot={dot} options={{ width: props.width }} />;
+  return (
+    <Graphviz
+      dot={dot}
+      options={{
+        width: props.width,
+        height: Math.min(props.width * 0.75, 500),
+      }}
+    />
+  );
 };
 
 const newAirportGraph = (seatRank: SeatRank, fareType: FareType) => {

@@ -28,10 +28,14 @@ const FareRateList = (props: {
 export const FareTypeSelector = (props: {
   currentType: FareType;
   onClick: (rate: FareType) => void;
+  size?: "sm" | "xs";
+  color?: "primary" | "secondary" | "accent";
 }) => {
+  const size = props.size ? `btn-${props.size}` : "";
+  const color = props.color ? `btn-${props.color}` : "";
   return (
     <div className="dropdown dropdown-right">
-      <label tabIndex={0} className="btn m-1">
+      <label tabIndex={0} className={`btn ${size} ${color} m-1`}>
         {props.currentType}
       </label>
       <ul

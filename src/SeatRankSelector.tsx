@@ -1,38 +1,36 @@
-import { Airport, airports } from "./const.ts";
+import { SeatRank, seatRanks } from "./const.ts";
 
-const AirportItem = (props: {
-  name: Airport;
-  onClick: (name: Airport) => void;
+const SeatRankItem = (props: {
+  name: SeatRank;
+  onClick: (name: SeatRank) => void;
 }) => {
   const handleClick = props.onClick.bind(null, props.name);
   return (
     <li>
-      <a className={"text-sm"} onClick={handleClick}>
-        {props.name}
-      </a>
+      <a onClick={handleClick}>{props.name}</a>
     </li>
   );
 };
 
-const AirportList = (props: {
-  airports: readonly Airport[];
-  onClick: (name: Airport) => void;
+const SeatRankList = (props: {
+  names: readonly SeatRank[];
+  onClick: (name: SeatRank) => void;
 }) => {
   return (
     <ul
       tabIndex={0}
       className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-max"
     >
-      {props.airports.map((name) => (
-        <AirportItem key={name} name={name} onClick={props.onClick} />
+      {props.names.map((name) => (
+        <SeatRankItem key={name} name={name} onClick={props.onClick} />
       ))}
     </ul>
   );
 };
 
-export const AirportSelector = (props: {
-  current: Airport;
-  onClick: (airport: Airport) => void;
+export const SeatRankSelector = (props: {
+  currentRank: SeatRank;
+  onClick: (seatName: SeatRank) => void;
   size?: "sm" | "xs";
   color?: "primary" | "secondary" | "accent";
 }) => {
@@ -41,9 +39,9 @@ export const AirportSelector = (props: {
   return (
     <div className="dropdown dropdown-right">
       <label tabIndex={0} className={`btn ${size} ${color} m-1`}>
-        {props.current}
+        {props.currentRank}
       </label>
-      <AirportList airports={airports} onClick={props.onClick} />
+      <SeatRankList names={seatRanks} onClick={props.onClick} />
     </div>
   );
 };

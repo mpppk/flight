@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 export const SeatRank = z.union([
-  z.literal("Standard"),
-  z.literal("Class J"),
-  z.literal("First"),
+  z.literal("普通席"),
+  z.literal("クラスJ"),
+  z.literal("ファーストクラス"),
 ]);
 export const seatRanks = SeatRank.options.map((x) => x.value);
 export type SeatRank = z.infer<typeof SeatRank>;
@@ -18,9 +18,9 @@ export const fareTypes = FareType.options.map((x) => x.value);
 export type FareType = z.infer<typeof FareType>;
 
 const seatRankAdditionalRate: Record<SeatRank, number> = {
-  Standard: 0,
-  "Class J": 0.1,
-  First: 0.5,
+  普通席: 0,
+  クラスJ: 0.1,
+  ファーストクラス: 0.5,
 };
 
 export const Airport = z.union([
