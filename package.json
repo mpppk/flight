@@ -18,10 +18,13 @@
   },
   "dependencies": {
     "daisyui": "^2.51.6",
+    "graphviz-react": "^1.2.5",
     "prettier": "^2.8.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "vitest": "^0.31.1"
+    "ts-graphviz": "^1.7.0",
+    "vitest": "^0.31.1",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",
