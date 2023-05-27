@@ -24,16 +24,29 @@ const seatRankAdditionalRate: Record<SeatRank, number> = {
 };
 
 export const Airport = z.union([
-  z.literal("羽田"),
+  z.literal("羽田・成田"),
   z.literal("那覇"),
   z.literal("新千歳"),
+  z.literal("伊丹・関空"),
+  z.literal("名古屋"),
+  z.literal("福岡"),
 ]);
 export const airports = Airport.options.map((x) => x.value);
 export type Airport = z.infer<typeof Airport>;
 
 export const airportRoutes: [Airport, Airport, number][] = [
-  ["羽田", "那覇", 984], // airport1, airport2, mile
-  ["羽田", "新千歳", 510],
+  ["羽田・成田", "新千歳", 510],
+  ["羽田・成田", "名古屋", 139],
+  ["羽田・成田", "伊丹・関空", 280],
+  ["羽田・成田", "福岡", 567],
+  ["羽田・成田", "那覇", 984], // airport1, airport2, mile
+  ["伊丹・関空", "新千歳", 666],
+  ["伊丹・関空", "福岡", 287],
+  ["伊丹・関空", "那覇", 739],
+  ["名古屋", "新千歳", 614],
+  ["名古屋", "福岡", 374],
+  ["名古屋", "那覇", 809],
+  ["福岡", "那覇", 537],
 ];
 
 const FOPs = (() => {
