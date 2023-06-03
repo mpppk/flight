@@ -31,9 +31,7 @@ export const EditablePrice = (props: {
   };
 
   const handleClickButton = () => {
-    console.log("current", inputEl.current);
     if (inputEl && inputEl.current) {
-      console.log("focus");
       inputEl.current.focus();
     }
     toggleEditing();
@@ -84,6 +82,11 @@ const EditPrice = (props: {
           className="input input-accent input-sm w-24 max-w-xs"
           onChange={handleChangeInput}
           onBlur={props.onBlur}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              props.onClickCheck();
+            }
+          }}
         />
       </div>
       <div className={"ml-2 h-6"}>

@@ -35,6 +35,7 @@ export const AirportSelector = (props: {
   onClick: (airport: Airport) => void;
   size?: "sm" | "xs";
   color?: "primary" | "secondary" | "accent";
+  airports?: Airport[];
 }) => {
   const size = props.size ? `btn-${props.size}` : "";
   const color = props.color ? `btn-${props.color}` : "";
@@ -43,7 +44,10 @@ export const AirportSelector = (props: {
       <label tabIndex={0} className={`btn ${size} ${color} m-1`}>
         {props.current}
       </label>
-      <AirportList airports={airports} onClick={props.onClick} />
+      <AirportList
+        airports={props.airports ?? airports}
+        onClick={props.onClick}
+      />
     </div>
   );
 };

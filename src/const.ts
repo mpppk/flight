@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Graph } from "./utils";
 
 export const SeatRank = z.union([
   z.literal("普通席"),
@@ -48,6 +49,24 @@ export const airportRoutes: [Airport, Airport, number][] = [
   ["名古屋", "那覇", 809],
   ["福岡", "那覇", 537],
 ];
+
+const newRouteMap = () => {
+  const m = new Graph<Airport, number>();
+  airportRoutes.forEach(([from, to, mile]) => {
+    m.addNode(from);
+    m.addNode(to);
+    m.addEdge(from, to, mile);
+  });
+  return m;
+};
+
+export const accessibleRoutes = (from: Airport): [Airport, number][] => {
+  return [...newRouteMap().getEdges(from).values()];
+};
+
+export const accessibleAirports = (from: Airport): Airport[] => {
+  return accessibleRoutes(from).map(([airport, _]) => airport);
+};
 
 const FOPs = (() => {
   const m = new Map<`${Airport}-${Airport}`, number>();
