@@ -108,3 +108,21 @@ const getFareRateAndBonus = (fareType: FareType) => {
       return [0.5, 0];
   }
 };
+
+export interface Flight {
+  from: Airport;
+  to: Airport;
+  seatRank: SeatRank;
+  fareType: FareType;
+  price: number;
+}
+
+export interface FlightDetail extends Flight {
+  fop: number;
+  yenPerFop: number;
+}
+
+export interface FlightPlan {
+  title: string;
+  flights: Flight[];
+}

@@ -7,9 +7,12 @@ import {
   accessibleAirports,
   Airport,
   FareType,
+  Flight,
+  FlightDetail,
+  FlightPlan,
   getFOP,
   SeatRank,
-} from "../const.ts";
+} from "../model.ts";
 
 const SpaceBetween = (props: { children: React.ReactNode }) => {
   return (
@@ -77,15 +80,12 @@ const PlusIcon = () => {
 };
 
 export const FlightPlanCard = (props: {
-  flight: Flight;
-  onChangeFlight: (flight: Flight) => void;
-  onDelete: (flight: Flight) => void;
+  flightPlan: FlightPlan;
+  onChangeFlight: (flight: Flight, index: number) => void;
+  onDelete: (flightPlan: FlightPlan) => void;
 }) => {
   const handleClickEditButton = () => {
-    console.log("edit");
-  };
-  const handleClickTrashButton = () => {
-    props.onDelete(props.flight);
+    console.log("edit"); // FIXME
   };
   return (
     <div className="mt-2 mx-2 card card-compact w-max glass">
@@ -101,16 +101,23 @@ export const FlightPlanCard = (props: {
             </button>
             <button
               className="btn btn-square btn-sm btn-ghost"
-              onClick={handleClickTrashButton}
+              onClick={props.onDelete.bind(null, props.flightPlan)}
             >
               <TrashIcon />
             </button>
           </div>
         </SpaceBetween>
-        <FlightCard
-          flightDetail={toFlightDetail(props.flight)}
-          onChange={props.onChangeFlight}
-        />
+        {props.flightPlan.flights.map((flight, index) => {
+          const handleChangeFlight = (flight: Flight) => {
+            props.onChangeFlight(flight, index);
+          };
+          return (
+            <FlightCard
+              flightDetail={toFlightDetail(flight)}
+              onChange={handleChangeFlight}
+            />
+          );
+        })}
       </div>
     </div>
   );
@@ -137,19 +144,6 @@ export const NewFlightPlanCard = (props: { onClickNewButton: () => void }) => {
     </div>
   );
 };
-
-export interface Flight {
-  from: Airport;
-  to: Airport;
-  seatRank: SeatRank;
-  fareType: FareType;
-  price: number;
-}
-
-interface FlightDetail extends Flight {
-  fop: number;
-  yenPerFop: number;
-}
 
 const FlightCard = (props: {
   flightDetail: FlightDetail;

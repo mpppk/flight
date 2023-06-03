@@ -1,11 +1,10 @@
-import { FareType, SeatRank } from "./const.ts";
+import { FareType, Flight, FlightPlan, SeatRank } from "./model.ts";
 import React from "react";
 import { SeatRankSelector } from "./components/SeatRankSelector.tsx";
 import { AirportGraph } from "./components/AirportGraph.tsx";
 import { useWindowSize } from "./hooks.ts";
 import { FareTypeSelector } from "./components/FareTypeSelector.tsx";
 import {
-  Flight,
   FlightPlanCard,
   NewFlightPlanCard,
 } from "./components/FlightPlanCard.tsx";
@@ -26,6 +25,13 @@ const newDefaultFlight: () => Flight = () => ({
   price: 20000,
 });
 
+const newDefaultFlightPlan = (title: string): FlightPlan => {
+  return {
+    title,
+    flights: [newDefaultFlight()],
+  };
+};
+
 function App() {
   const [width] = useWindowSize();
   const [seatRank, setSeatRank] = React.useState<SeatRank>("普通席");
@@ -39,19 +45,11 @@ function App() {
     setFareRate(rate);
   };
 
-  const [flights, setFlights] = React.useState<Flight[]>([newDefaultFlight()]);
-  const handleFlightChange = (index: number, flight: Flight) => {
-    flights.splice(index, 1, flight);
-    setFlights([...flights]);
-  };
-
-  const handleFlightPlanDelete = (index: number) => {
-    flights.splice(index, 1);
-    setFlights([...flights]);
-  };
-
+  const [flightPlans, setFlightPlans] = React.useState<FlightPlan[]>([
+    newDefaultFlightPlan("旅程1"),
+  ]);
   const handleClickNewFlightPlanButton = () => {
-    setFlights([...flights, newDefaultFlight()]);
+    setFlightPlans([...flightPlans, newDefaultFlightPlan("旅程1")]); // FIXME title
   };
 
   return (
@@ -69,16 +67,20 @@ function App() {
           </Center>
         </div>
         <Center>
-          {flights.map((flight, i) => {
-            const handleChange = (newFlight: Flight) => {
-              handleFlightChange(i, newFlight);
+          {flightPlans.map((flightPlan, flightPlanIndex) => {
+            const handleChange = (newFlight: Flight, flightIndex: number) => {
+              const newFlightPlan = { ...flightPlan };
+              flightPlan.flights.splice(flightIndex, 1, newFlight);
+              flightPlans.splice(flightPlanIndex, 1, newFlightPlan);
+              setFlightPlans([...flightPlans]);
             };
             const handleDelete = () => {
-              handleFlightPlanDelete(i);
+              flightPlans.splice(flightPlanIndex, 1);
+              setFlightPlans([...flightPlans]);
             };
             return (
               <FlightPlanCard
-                flight={flight}
+                flightPlan={flightPlan}
                 onChangeFlight={handleChange}
                 onDelete={handleDelete}
               />
