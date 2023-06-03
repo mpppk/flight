@@ -4,7 +4,11 @@ import { SeatRankSelector } from "./components/SeatRankSelector.tsx";
 import { AirportGraph } from "./components/AirportGraph.tsx";
 import { useWindowSize } from "./hooks.ts";
 import { FareTypeSelector } from "./components/FareTypeSelector.tsx";
-import { Flight, FlightPlanCard } from "./components/FlightPlanCard.tsx";
+import {
+  Flight,
+  FlightPlanCard,
+  NewFlightPlanCard,
+} from "./components/FlightPlanCard.tsx";
 
 const Center = (props: { children: React.ReactNode }) => {
   return (
@@ -13,6 +17,14 @@ const Center = (props: { children: React.ReactNode }) => {
     </div>
   );
 };
+
+const newDefaultFlight: () => Flight = () => ({
+  from: "羽田・成田",
+  to: "那覇",
+  seatRank: "普通席",
+  fareType: "100%",
+  price: 20000,
+});
 
 function App() {
   const [width] = useWindowSize();
@@ -26,17 +38,20 @@ function App() {
   const handleSelectFareRate = (rate: FareType) => {
     setFareRate(rate);
   };
-  console.log("width", width, width - 8);
 
-  const [flight, setFlight] = React.useState<Flight>({
-    from: "羽田・成田",
-    to: "那覇",
-    seatRank: "普通席",
-    fareType: "100%",
-    price: 20000,
-  });
-  const handleFlightChange = (flight: Flight) => {
-    setFlight(flight);
+  const [flights, setFlights] = React.useState<Flight[]>([newDefaultFlight()]);
+  const handleFlightChange = (index: number, flight: Flight) => {
+    flights.splice(index, 1, flight);
+    setFlights([...flights]);
+  };
+
+  const handleFlightPlanDelete = (index: number) => {
+    flights.splice(index, 1);
+    setFlights([...flights]);
+  };
+
+  const handleClickNewFlightPlanButton = () => {
+    setFlights([...flights, newDefaultFlight()]);
   };
 
   return (
@@ -54,8 +69,24 @@ function App() {
           </Center>
         </div>
         <Center>
-          <FlightPlanCard flight={flight} onChangeFlight={handleFlightChange} />
-          <FlightPlanCard flight={flight} onChangeFlight={handleFlightChange} />
+          {flights.map((flight, i) => {
+            const handleChange = (newFlight: Flight) => {
+              handleFlightChange(i, newFlight);
+            };
+            const handleDelete = () => {
+              handleFlightPlanDelete(i);
+            };
+            return (
+              <FlightPlanCard
+                flight={flight}
+                onChangeFlight={handleChange}
+                onDelete={handleDelete}
+              />
+            );
+          })}
+          <NewFlightPlanCard
+            onClickNewButton={handleClickNewFlightPlanButton}
+          />
         </Center>
       </div>
     </div>

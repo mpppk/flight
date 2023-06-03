@@ -56,30 +56,53 @@ const TrashIcon = () => {
     </svg>
   );
 };
+
+const PlusIcon = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+      className="w-6 h-6"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+      />
+    </svg>
+  );
+};
+
 export const FlightPlanCard = (props: {
   flight: Flight;
   onChangeFlight: (flight: Flight) => void;
+  onDelete: (flight: Flight) => void;
 }) => {
-  // const [flight, setFlight] = React.useState<Flight>({
-  //   from: "羽田・成田",
-  //   to: "那覇",
-  //   seatRank: "普通席",
-  //   fareType: "100%",
-  //   price: 20000,
-  // });
-  // const handleFlightChange = (flight: Flight) => {
-  //   setFlight(flight);
-  // };
+  const handleClickEditButton = () => {
+    console.log("edit");
+  };
+  const handleClickTrashButton = () => {
+    props.onDelete(props.flight);
+  };
   return (
     <div className="mt-2 mx-2 card card-compact w-max glass">
       <div className="card-body">
         <SpaceBetween>
           <h2 className="card-title">旅程1</h2>
           <div>
-            <button className="btn btn-square btn-sm btn-ghost">
+            <button
+              className="btn btn-square btn-sm btn-ghost"
+              onClick={handleClickEditButton}
+            >
               <EditIcon />
             </button>
-            <button className="btn btn-square btn-sm btn-ghost">
+            <button
+              className="btn btn-square btn-sm btn-ghost"
+              onClick={handleClickTrashButton}
+            >
               <TrashIcon />
             </button>
           </div>
@@ -88,6 +111,28 @@ export const FlightPlanCard = (props: {
           flightDetail={toFlightDetail(props.flight)}
           onChange={props.onChangeFlight}
         />
+      </div>
+    </div>
+  );
+};
+
+export const NewFlightPlanCard = (props: { onClickNewButton: () => void }) => {
+  return (
+    <div className="mt-2 mx-2 card card-compact w-max glass">
+      <div className="card-body">
+        <SpaceBetween>
+          <button className="btn btn-ghost" onClick={props.onClickNewButton}>
+            <h2 className="card-title">新しい旅程を追加</h2>
+          </button>
+          <div className={"ml-2"}>
+            <button
+              className="btn btn-square btn-ghost"
+              onClick={props.onClickNewButton}
+            >
+              <PlusIcon />
+            </button>
+          </div>
+        </SpaceBetween>
       </div>
     </div>
   );
@@ -133,12 +178,6 @@ const FlightCard = (props: {
   const handlePriceChange = (price: number) => {
     props.onChange({ ...flight, price: price });
   };
-
-  console.log(
-    "accessible airports from",
-    flight.from,
-    accessibleAirports(flight.from)
-  );
 
   return (
     <div className="card card-compact bg-base-100 shadow-xl">
