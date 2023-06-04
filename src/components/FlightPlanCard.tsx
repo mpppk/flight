@@ -2,7 +2,7 @@ import { AirportSelector } from "./AirportSelector.tsx";
 import { SeatRankSelector } from "./SeatRankSelector.tsx";
 import { FareTypeSelector } from "./FareTypeSelector.tsx";
 import { EditablePrice } from "./EditablePrice.tsx";
-import React, { Fragment, useRef, useState } from "react";
+import React, { Fragment, useState } from "react";
 import {
   accessibleAirports,
   Airport,
@@ -13,60 +13,13 @@ import {
   getFOP,
   SeatRank,
 } from "../model.ts";
-import { CheckIcon, EditIcon, PlusIcon, TrashIcon } from "./icons.tsx";
+import { EditIcon, PlusIcon, TrashIcon } from "./icons.tsx";
+import { EditableText } from "./Editable.tsx";
 
 const SpaceBetween = (props: { children: React.ReactNode }) => {
   return (
     <div className="flex flex-wrap justify-between items-center h-full">
       {props.children}
-    </div>
-  );
-};
-
-const TextInput = (props: {
-  text: string;
-  onChange?: (text: string) => void;
-  onClickCheck?: (text: string) => void;
-  onBlur?: (text: string) => void;
-}) => {
-  const inputEl = useRef<HTMLInputElement>(null);
-  const handleChangeInput: React.ChangeEventHandler<HTMLInputElement> = (
-    event
-  ) => {
-    props.onChange?.(event.target.value);
-  };
-  const handleBlur = () => {
-    props.onBlur?.(inputEl.current?.value ?? "");
-  };
-  const handleClickCheck = () => {
-    props.onClickCheck?.(inputEl.current?.value ?? "");
-  };
-  return (
-    <div className={`flex flex-wrap justify-center items-center w-max`}>
-      <div>
-        <input
-          autoFocus
-          ref={inputEl}
-          type="text"
-          value={props.text}
-          className="input input-accent input-sm w-24 max-w-xs"
-          onChange={handleChangeInput}
-          onBlur={handleBlur}
-          onKeyDown={(event) => {
-            if (event.key === "Enter") {
-              handleClickCheck();
-            }
-          }}
-        />
-      </div>
-      <div className={"ml-2 h-6"}>
-        <button
-          className="btn btn-primary btn-xs btn-square"
-          onClick={handleClickCheck}
-        >
-          <CheckIcon />
-        </button>
-      </div>
     </div>
   );
 };
@@ -80,28 +33,23 @@ export const FlightPlanCard = (props: {
   const handleClickEditButton = () => {
     setEditing(true);
   };
-  const updateTitle = (text: string) => {
-    setTitle(text);
-  };
-  const completeTitle = (text: string) => {
-    setTitle(text);
-    setEditing(false);
-  };
   const [editing, setEditing] = useState(false);
   const [title, setTitle] = useState("旅程1");
+  const handleChangeTitle = (title: string, editing: boolean) => {
+    setTitle(title);
+    setEditing(editing);
+  };
   return (
     <div className="mt-2 mx-2 card card-compact w-max glass">
       <div className="card-body">
         <SpaceBetween>
-          {!editing && <h2 className="card-title">{title}</h2>}
-          {editing && (
-            <TextInput
-              text={title}
-              onBlur={completeTitle}
-              onClickCheck={completeTitle}
-              onChange={updateTitle}
-            />
-          )}
+          <EditableText
+            text={title}
+            editing={editing}
+            onChange={handleChangeTitle}
+          >
+            <h2 className="card-title">{title}</h2>
+          </EditableText>
           <div>
             <button
               className={`btn btn-square btn-sm btn-ghost ${
