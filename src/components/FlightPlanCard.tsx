@@ -2,7 +2,7 @@ import { AirportSelector } from "./AirportSelector.tsx";
 import { SeatRankSelector } from "./SeatRankSelector.tsx";
 import { FareTypeSelector } from "./FareTypeSelector.tsx";
 import { EditablePrice } from "./EditablePrice.tsx";
-import React, { Fragment, useState } from "react";
+import { Fragment, useState } from "react";
 import {
   accessibleAirports,
   Airport,
@@ -15,14 +15,7 @@ import {
 } from "../model.ts";
 import { EditIcon, PlusIcon, TrashIcon } from "./icons.tsx";
 import { EditableText } from "./Editable.tsx";
-
-const SpaceBetween = (props: { children: React.ReactNode }) => {
-  return (
-    <div className="flex flex-wrap justify-between items-center h-full">
-      {props.children}
-    </div>
-  );
-};
+import { SpaceBetween } from "./layout.tsx";
 
 export const FlightPlanCard = (props: {
   flightPlan: FlightPlan;
@@ -40,27 +33,29 @@ export const FlightPlanCard = (props: {
     setEditing(editing);
   };
   return (
-    <div className="mt-2 mx-2 card card-bordered bg-base-100 shadow-lg w-max">
+    <div className="mt-2 mx-2 card card-compact card-bordered bg-base-100 shadow-lg w-max">
       <div className="card-body">
         <SpaceBetween>
-          <EditableText
-            text={title}
-            editing={editing}
-            onChange={handleChangeTitle}
-          >
-            <h2 className="card-title">{title}</h2>
-          </EditableText>
-          <div>
+          <div className={"flex flex-wrap justify-start items-center h-full"}>
+            <EditableText
+              text={title}
+              editing={editing}
+              onChange={handleChangeTitle}
+            >
+              <h2 className="card-title">{title}</h2>
+            </EditableText>
             <button
-              className={`btn btn-square btn-sm ${
-                editing ? "btn-disabled" : ""
-              }`}
+              className={`btn btn-ghost btn-square btn-sm ${
+                editing ? "invisible" : ""
+              } ml-2`}
               onClick={handleClickEditButton}
             >
               <EditIcon />
             </button>
+          </div>
+          <div>
             <button
-              className="btn btn-square btn-sm"
+              className="btn btn-ghost btn-square btn-sm"
               onClick={props.onDelete.bind(null, props.flightPlan)}
             >
               <TrashIcon />
@@ -96,7 +91,7 @@ export const FlightPlanCard = (props: {
 
 export const NewFlightPlanCard = (props: { onClickNewButton: () => void }) => {
   return (
-    <div className="mt-2 mx-2 card card-bordered bg-base-100 shadow-lg w-max">
+    <div className="mt-2 mx-2 card card-compact card-bordered bg-base-100 shadow-lg w-max">
       <div className="card-body">
         {/*<SpaceBetween>*/}
         <button className="btn btn-wide" onClick={props.onClickNewButton}>
@@ -148,18 +143,23 @@ const FlightCard = (props: {
             onClick={handleToChange}
             airports={accessibleAirports(flight.from)}
           />
+          <button className="btn btn-ghost btn-square btn-sm">
+            <TrashIcon />
+          </button>
         </h2>
-        <SeatRankSelector
-          currentRank={flight.seatRank}
-          onClick={handleSelectSeatRank}
-          size={"sm"}
-        />
-        <FareTypeSelector
-          currentType={flight.fareType}
-          onClick={handleSelectFareRate}
-          size={"sm"}
-        />
-        <EditablePrice price={flight.price} onChange={handlePriceChange} />
+        <div className="flex flex-wrap justify-start items-center h-full">
+          <SeatRankSelector
+            currentRank={flight.seatRank}
+            onClick={handleSelectSeatRank}
+            size={"sm"}
+          />
+          <FareTypeSelector
+            currentType={flight.fareType}
+            onClick={handleSelectFareRate}
+            size={"sm"}
+          />
+          <EditablePrice price={flight.price} onChange={handlePriceChange} />
+        </div>
         {flight.fop}FOP({flight.yenPerFop.toFixed(2)}円/FOP)
       </div>
     </div>

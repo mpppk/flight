@@ -11,7 +11,7 @@ import {
 
 const Center = (props: { children: React.ReactNode }) => {
   return (
-    <div className="flex flex-wrap justify-center items-center h-full">
+    <div className="flex flex-wrap justify-center items-start h-full">
       {props.children}
     </div>
   );
@@ -53,7 +53,7 @@ function App() {
   };
 
   return (
-    <div className="container mx-auto px-4">
+    <div className="container mx-auto px-4 mt-2 mb-2">
       <SeatRankSelector currentRank={seatRank} onClick={handleSelectSeatRank} />
       <FareTypeSelector currentType={fareRate} onClick={handleSelectFareRate} />
       <div>
