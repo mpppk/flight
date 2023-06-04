@@ -40,7 +40,7 @@ export const FlightPlanCard = (props: {
     setEditing(editing);
   };
   return (
-    <div className="mt-2 mx-2 card card-compact w-max glass">
+    <div className="mt-2 mx-2 card card-bordered bg-base-100 shadow-lg w-max">
       <div className="card-body">
         <SpaceBetween>
           <EditableText
@@ -52,7 +52,7 @@ export const FlightPlanCard = (props: {
           </EditableText>
           <div>
             <button
-              className={`btn btn-square btn-sm btn-ghost ${
+              className={`btn btn-square btn-sm ${
                 editing ? "btn-disabled" : ""
               }`}
               onClick={handleClickEditButton}
@@ -60,7 +60,7 @@ export const FlightPlanCard = (props: {
               <EditIcon />
             </button>
             <button
-              className="btn btn-square btn-sm btn-ghost"
+              className="btn btn-square btn-sm"
               onClick={props.onDelete.bind(null, props.flightPlan)}
             >
               <TrashIcon />
@@ -96,21 +96,14 @@ export const FlightPlanCard = (props: {
 
 export const NewFlightPlanCard = (props: { onClickNewButton: () => void }) => {
   return (
-    <div className="mt-2 mx-2 card card-compact w-max glass">
+    <div className="mt-2 mx-2 card card-bordered bg-base-100 shadow-lg w-max">
       <div className="card-body">
-        <SpaceBetween>
-          <button className="btn btn-ghost" onClick={props.onClickNewButton}>
-            <h2 className="card-title">新しい旅程を追加</h2>
-          </button>
-          <div className={"ml-2"}>
-            <button
-              className="btn btn-square btn-ghost"
-              onClick={props.onClickNewButton}
-            >
-              <PlusIcon />
-            </button>
-          </div>
-        </SpaceBetween>
+        {/*<SpaceBetween>*/}
+        <button className="btn btn-wide" onClick={props.onClickNewButton}>
+          新しい旅程を追加
+          <PlusIcon />
+        </button>
+        {/*</SpaceBetween>*/}
       </div>
     </div>
   );
@@ -145,7 +138,7 @@ const FlightCard = (props: {
   };
 
   return (
-    <div className="card card-compact bg-base-100 shadow-xl">
+    <div className="card card-compact bg-base-100 shadow-lg">
       <div className="card-body">
         <h2 className="card-title">
           <AirportSelector current={flight.from} onClick={handleFromChange} />
@@ -175,21 +168,12 @@ const FlightCard = (props: {
 
 const NewFlightCard = (props: { onClick: () => void }) => {
   return (
-    <div className="card card-compact bg-base-100 shadow-xl">
+    <div className="card card-compact bg-base-100 shadow-lg">
       <div className="card-body">
-        <SpaceBetween>
-          <button className="btn btn-ghost" onClick={props.onClick}>
-            <p>フライトを追加</p>
-          </button>
-          <div className={"ml-1"}>
-            <button
-              className="btn btn-square btn-ghost"
-              onClick={props.onClick}
-            >
-              <PlusIcon />
-            </button>
-          </div>
-        </SpaceBetween>
+        <button className="btn btn-wide" onClick={props.onClick}>
+          フライトを追加
+          <PlusIcon />
+        </button>
       </div>
     </div>
   );

@@ -27,7 +27,9 @@ export const AirportGraph = (props: {
 };
 
 const newAirportGraph = (seatRank: SeatRank, fareType: FareType) => {
-  const G = new Graph();
+  const G = new Graph({
+    [_.bgcolor]: "#f9f7f5",
+  });
   const nodes = airports.reduce((m, airport) => {
     m[airport] = new Node(airport);
     return m;

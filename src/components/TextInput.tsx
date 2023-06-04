@@ -39,7 +39,7 @@ export const TextInput = (props: {
       </div>
       <div className={"ml-2 h-6"}>
         <button
-          className="btn btn-primary btn-xs btn-square"
+          className="btn btn-accent btn-xs btn-square"
           onClick={handleClickCheck}
         >
           <CheckIcon />
