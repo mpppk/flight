@@ -78,11 +78,17 @@ function App() {
               flightPlans.splice(flightPlanIndex, 1);
               setFlightPlans([...flightPlans]);
             };
+            const handleCreateFlight = () => {
+              flightPlan.flights.push(newDefaultFlight());
+              setFlightPlans([...flightPlans]);
+            };
             return (
               <FlightPlanCard
+                key={flightPlanIndex + flightPlan.title}
                 flightPlan={flightPlan}
                 onChangeFlight={handleChange}
                 onDelete={handleDelete}
+                onCreateFlight={handleCreateFlight}
               />
             );
           })}
