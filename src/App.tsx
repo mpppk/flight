@@ -82,6 +82,10 @@ function App() {
               flightPlan.flights.push(newDefaultFlight());
               setFlightPlans([...flightPlans]);
             };
+            const handleDeleteFlight = (_flight: Flight, index: number) => {
+              flightPlan.flights.splice(index, 1);
+              setFlightPlans([...flightPlans]);
+            };
             return (
               <FlightPlanCard
                 key={flightPlanIndex + flightPlan.title}
@@ -89,6 +93,7 @@ function App() {
                 onChangeFlight={handleChange}
                 onDelete={handleDelete}
                 onCreateFlight={handleCreateFlight}
+                onDeleteFlight={handleDeleteFlight}
               />
             );
           })}

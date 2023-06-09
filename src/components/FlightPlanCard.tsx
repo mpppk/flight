@@ -22,6 +22,7 @@ export const FlightPlanCard = (props: {
   onChangeFlight: (flight: Flight, index: number) => void;
   onDelete: (flightPlan: FlightPlan) => void;
   onCreateFlight: () => void;
+  onDeleteFlight: (flight: Flight, index: number) => void;
 }) => {
   const handleClickEditButton = () => {
     setEditing(true);
@@ -66,6 +67,9 @@ export const FlightPlanCard = (props: {
           const handleChangeFlight = (flight: Flight) => {
             props.onChangeFlight(flight, index);
           };
+          const handleDeleteFlight = () => {
+            props.onDeleteFlight(flight, index);
+          };
           const key =
             props.flightPlan.title +
             index +
@@ -79,6 +83,7 @@ export const FlightPlanCard = (props: {
               <FlightCard
                 flightDetail={toFlightDetail(flight)}
                 onChange={handleChangeFlight}
+                onDelete={handleDeleteFlight}
               />
             </Fragment>
           );
@@ -107,6 +112,7 @@ export const NewFlightPlanCard = (props: { onClickNewButton: () => void }) => {
 const FlightCard = (props: {
   flightDetail: FlightDetail;
   onChange: (flight: Flight) => void;
+  onDelete: (flight: Flight) => void;
 }) => {
   const flight = props.flightDetail;
 
@@ -132,6 +138,10 @@ const FlightCard = (props: {
     props.onChange({ ...flight, price: price });
   };
 
+  const handleClickTrash = () => {
+    props.onDelete(flight);
+  };
+
   return (
     <div className="card card-compact bg-base-100 shadow-lg">
       <div className="card-body">
@@ -143,7 +153,10 @@ const FlightCard = (props: {
             onClick={handleToChange}
             airports={accessibleAirports(flight.from)}
           />
-          <button className="btn btn-ghost btn-square btn-sm">
+          <button
+            className="btn btn-ghost btn-square btn-sm"
+            onClick={handleClickTrash}
+          >
             <TrashIcon />
           </button>
         </h2>
