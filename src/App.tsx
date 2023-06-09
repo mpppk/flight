@@ -46,10 +46,10 @@ function App() {
   };
 
   const [flightPlans, setFlightPlans] = React.useState<FlightPlan[]>([
-    newDefaultFlightPlan("旅程1"),
+    newDefaultFlightPlan("新しい旅程"),
   ]);
   const handleClickNewFlightPlanButton = () => {
-    setFlightPlans([...flightPlans, newDefaultFlightPlan("旅程1")]); // FIXME title
+    setFlightPlans([...flightPlans, newDefaultFlightPlan("新しい旅程")]); // FIXME title
   };
 
   return (

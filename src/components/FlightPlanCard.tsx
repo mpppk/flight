@@ -28,7 +28,7 @@ export const FlightPlanCard = (props: {
     setEditing(true);
   };
   const [editing, setEditing] = useState(false);
-  const [title, setTitle] = useState("旅程1");
+  const [title, setTitle] = useState("新しい旅程");
   const handleChangeTitle = (title: string, editing: boolean) => {
     setTitle(title);
     setEditing(editing);
