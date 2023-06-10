@@ -7,6 +7,7 @@ import {
   redirect,
   RouterProvider,
 } from "react-router-dom";
+import { SignIn } from "./SignIn.tsx";
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
     loader: async () => {
       return redirect("/jal");
     },
+  },
+  {
+    path: "/signin",
+    element: <SignIn />,
   },
   {
     path: "/jal",
