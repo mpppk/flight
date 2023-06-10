@@ -65,7 +65,7 @@ export const accessibleRoutes = (from: Airport): [Airport, number][] => {
 };
 
 export const accessibleAirports = (from: Airport): Airport[] => {
-  return accessibleRoutes(from).map(([airport, _]) => airport);
+  return accessibleRoutes(from).map(([airport]) => airport);
 };
 
 const FOPs = (() => {
@@ -94,6 +94,10 @@ export const getFOP = (
   return Math.floor(
     fop * (seatRankAdditionalRate[seatRank] + fareRate) + bonus
   );
+};
+
+export const getFOPFromFlight = (flight: Flight) => {
+  return getFOP(flight.from, flight.to, flight.seatRank, flight.fareType);
 };
 
 const getFareRateAndBonus = (fareType: FareType) => {
@@ -126,3 +130,7 @@ export interface FlightPlan {
   title: string;
   flights: Flight[];
 }
+
+export const sumFlightPlanFOP = (flights: Flight[]) => {
+  return flights.reduce((sum, flight) => sum + getFOPFromFlight(flight), 0);
+};

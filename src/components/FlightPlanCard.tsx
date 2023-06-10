@@ -10,8 +10,9 @@ import {
   Flight,
   FlightDetail,
   FlightPlan,
-  getFOP,
+  getFOPFromFlight,
   SeatRank,
+  sumFlightPlanFOP,
 } from "../model.ts";
 import { EditIcon, PlusIcon, TrashIcon } from "./icons.tsx";
 import { EditableText } from "./Editable.tsx";
@@ -33,6 +34,11 @@ export const FlightPlanCard = (props: {
     setTitle(title);
     setEditing(editing);
   };
+  const flightPlanFOPSum = sumFlightPlanFOP(props.flightPlan.flights);
+  const priceSum = props.flightPlan.flights.reduce(
+    (sum, flight) => flight.price + sum,
+    0
+  );
   return (
     <div className="mt-2 mx-2 card card-compact card-bordered bg-base-100 shadow-lg w-max">
       <div className="card-body">
@@ -63,6 +69,8 @@ export const FlightPlanCard = (props: {
             </button>
           </div>
         </SpaceBetween>
+        合計{flightPlanFOPSum}FOP({(priceSum / flightPlanFOPSum).toFixed(2)}
+        円/FOP)
         {props.flightPlan.flights.map((flight, index) => {
           const handleChangeFlight = (flight: Flight) => {
             props.onChangeFlight(flight, index);
@@ -193,7 +201,7 @@ const NewFlightCard = (props: { onClick: () => void }) => {
 };
 
 const toFlightDetail = (flight: Flight): FlightDetail => {
-  const fop = getFOP(flight.from, flight.to, flight.seatRank, flight.fareType);
+  const fop = getFOPFromFlight(flight);
   return {
     ...flight,
     fop,
