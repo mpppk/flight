@@ -7,4 +7,8 @@ export default {
     extend: {},
   },
   plugins: [daisyui],
+  daisyui: {
+    themes: ["cupcake"],
+    darkMode: "cupcake",
+  },
 };

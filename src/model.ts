@@ -1,9 +1,10 @@
 import { z } from "zod";
+import { Graph } from "./utils";
 
 export const SeatRank = z.union([
-  z.literal("Standard"),
-  z.literal("Class J"),
-  z.literal("First"),
+  z.literal("普通席"),
+  z.literal("クラスJ"),
+  z.literal("ファーストクラス"),
 ]);
 export const seatRanks = SeatRank.options.map((x) => x.value);
 export type SeatRank = z.infer<typeof SeatRank>;
@@ -18,9 +19,9 @@ export const fareTypes = FareType.options.map((x) => x.value);
 export type FareType = z.infer<typeof FareType>;
 
 const seatRankAdditionalRate: Record<SeatRank, number> = {
-  Standard: 0,
-  "Class J": 0.1,
-  First: 0.5,
+  普通席: 0,
+  クラスJ: 0.1,
+  ファーストクラス: 0.5,
 };
 
 export const Airport = z.union([
@@ -48,6 +49,24 @@ export const airportRoutes: [Airport, Airport, number][] = [
   ["名古屋", "那覇", 809],
   ["福岡", "那覇", 537],
 ];
+
+const newRouteMap = () => {
+  const m = new Graph<Airport, number>();
+  airportRoutes.forEach(([from, to, mile]) => {
+    m.addNode(from);
+    m.addNode(to);
+    m.addEdge(from, to, mile);
+  });
+  return m;
+};
+
+export const accessibleRoutes = (from: Airport): [Airport, number][] => {
+  return [...newRouteMap().getEdges(from).values()];
+};
+
+export const accessibleAirports = (from: Airport): Airport[] => {
+  return accessibleRoutes(from).map(([airport]) => airport);
+};
 
 const FOPs = (() => {
   const m = new Map<`${Airport}-${Airport}`, number>();
@@ -77,6 +96,10 @@ export const getFOP = (
   );
 };
 
+export const getFOPFromFlight = (flight: Flight) => {
+  return getFOP(flight.from, flight.to, flight.seatRank, flight.fareType);
+};
+
 const getFareRateAndBonus = (fareType: FareType) => {
   switch (fareType) {
     case "100%":
@@ -88,4 +111,26 @@ const getFareRateAndBonus = (fareType: FareType) => {
     case "50%":
       return [0.5, 0];
   }
+};
+
+export interface Flight {
+  from: Airport;
+  to: Airport;
+  seatRank: SeatRank;
+  fareType: FareType;
+  price: number;
+}
+
+export interface FlightDetail extends Flight {
+  fop: number;
+  yenPerFop: number;
+}
+
+export interface FlightPlan {
+  title: string;
+  flights: Flight[];
+}
+
+export const sumFlightPlanFOP = (flights: Flight[]) => {
+  return flights.reduce((sum, flight) => sum + getFOPFromFlight(flight), 0);
 };

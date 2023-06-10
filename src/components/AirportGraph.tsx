@@ -6,7 +6,7 @@ import {
   FareType,
   getFOP,
   SeatRank,
-} from "./const.ts";
+} from "../model.ts";
 import Graphviz from "graphviz-react";
 
 export const AirportGraph = (props: {
@@ -15,11 +15,21 @@ export const AirportGraph = (props: {
   width: number;
 }) => {
   const dot = toDot(newAirportGraph(props.seatRank, props.fareType));
-  return <Graphviz dot={dot} options={{ width: props.width }} />;
+  return (
+    <Graphviz
+      dot={dot}
+      options={{
+        width: props.width,
+        height: Math.min(props.width * 0.75, 500),
+      }}
+    />
+  );
 };
 
 const newAirportGraph = (seatRank: SeatRank, fareType: FareType) => {
-  const G = new Graph();
+  const G = new Graph({
+    [_.bgcolor]: "#f9f7f5",
+  });
   const nodes = airports.reduce((m, airport) => {
     m[airport] = new Node(airport);
     return m;

@@ -1,56 +1,40 @@
-import { FareType, fareTypes, SeatRank, seatRanks } from "./const.ts";
+import { FareType, Flight, FlightPlan, SeatRank } from "./model.ts";
 import React from "react";
-import { AirportSelector } from "./AirportSelector.tsx";
-import { AirportGraph } from "./AirportGraph.tsx";
+import { SeatRankSelector } from "./components/SeatRankSelector.tsx";
+import { AirportGraph } from "./components/AirportGraph.tsx";
 import { useWindowSize } from "./hooks.ts";
+import { FareTypeSelector } from "./components/FareTypeSelector.tsx";
+import {
+  FlightPlanCard,
+  NewFlightPlanCard,
+} from "./components/FlightPlanCard.tsx";
 
-const FareRateItem = (props: {
-  fareType: FareType;
-  onClick: (name: FareType) => void;
-}) => {
-  const handleClick = props.onClick.bind(null, props.fareType);
+const Center = (props: { children: React.ReactNode }) => {
   return (
-    <li>
-      <a onClick={handleClick}>{props.fareType}</a>
-    </li>
-  );
-};
-
-const FareRateList = (props: {
-  fareTypes: readonly FareType[];
-  onClick: (name: FareType) => void;
-}) => {
-  return (
-    <ul>
-      {props.fareTypes.map((rate) => (
-        <FareRateItem key={rate} fareType={rate} onClick={props.onClick} />
-      ))}
-    </ul>
-  );
-};
-
-const FareTypeSelector = (props: {
-  currentType: FareType;
-  onClick: (rate: FareType) => void;
-}) => {
-  return (
-    <div className="dropdown dropdown-right">
-      <label tabIndex={0} className="btn m-1">
-        {props.currentType}
-      </label>
-      <ul
-        tabIndex={0}
-        className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-32"
-      >
-        <FareRateList fareTypes={fareTypes} onClick={props.onClick} />
-      </ul>
+    <div className="flex flex-wrap justify-center items-start h-full">
+      {props.children}
     </div>
   );
 };
 
+const newDefaultFlight: () => Flight = () => ({
+  from: "羽田・成田",
+  to: "那覇",
+  seatRank: "普通席",
+  fareType: "100%",
+  price: 20000,
+});
+
+const newDefaultFlightPlan = (title: string): FlightPlan => {
+  return {
+    title,
+    flights: [newDefaultFlight()],
+  };
+};
+
 function App() {
   const [width] = useWindowSize();
-  const [seatRank, setSeatRank] = React.useState<SeatRank>("Standard");
+  const [seatRank, setSeatRank] = React.useState<SeatRank>("普通席");
   const handleSelectSeatRank = (name: SeatRank) => {
     setSeatRank(name);
     console.log(name);
@@ -60,18 +44,65 @@ function App() {
   const handleSelectFareRate = (rate: FareType) => {
     setFareRate(rate);
   };
+
+  const [flightPlans, setFlightPlans] = React.useState<FlightPlan[]>([
+    newDefaultFlightPlan("新しい旅程"),
+  ]);
+  const handleClickNewFlightPlanButton = () => {
+    setFlightPlans([...flightPlans, newDefaultFlightPlan("新しい旅程")]); // FIXME title
+  };
+
   return (
-    <>
-      <AirportSelector
-        currentRank={seatRank}
-        seatRanks={seatRanks}
-        onClick={handleSelectSeatRank}
-      />
+    <div className="container mx-auto px-4 mt-2 mb-2">
+      <SeatRankSelector currentRank={seatRank} onClick={handleSelectSeatRank} />
       <FareTypeSelector currentType={fareRate} onClick={handleSelectFareRate} />
-      <div className={"mt-2"}>
-        <AirportGraph seatRank={seatRank} fareType={fareRate} width={width} />
+      <div>
+        <div className={"mt-2"}>
+          <Center>
+            <AirportGraph
+              seatRank={seatRank}
+              fareType={fareRate}
+              width={Math.max(width - 32, 0)}
+            />
+          </Center>
+        </div>
+        <Center>
+          {flightPlans.map((flightPlan, flightPlanIndex) => {
+            const handleChange = (newFlight: Flight, flightIndex: number) => {
+              const newFlightPlan = { ...flightPlan };
+              flightPlan.flights.splice(flightIndex, 1, newFlight);
+              flightPlans.splice(flightPlanIndex, 1, newFlightPlan);
+              setFlightPlans([...flightPlans]);
+            };
+            const handleDelete = () => {
+              flightPlans.splice(flightPlanIndex, 1);
+              setFlightPlans([...flightPlans]);
+            };
+            const handleCreateFlight = () => {
+              flightPlan.flights.push(newDefaultFlight());
+              setFlightPlans([...flightPlans]);
+            };
+            const handleDeleteFlight = (_flight: Flight, index: number) => {
+              flightPlan.flights.splice(index, 1);
+              setFlightPlans([...flightPlans]);
+            };
+            return (
+              <FlightPlanCard
+                key={flightPlanIndex + flightPlan.title}
+                flightPlan={flightPlan}
+                onChangeFlight={handleChange}
+                onDelete={handleDelete}
+                onCreateFlight={handleCreateFlight}
+                onDeleteFlight={handleDeleteFlight}
+              />
+            );
+          })}
+          <NewFlightPlanCard
+            onClickNewButton={handleClickNewFlightPlanButton}
+          />
+        </Center>
       </div>
-    </>
+    </div>
   );
 }
 
