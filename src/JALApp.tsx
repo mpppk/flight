@@ -32,7 +32,7 @@ const newDefaultFlightPlan = (title: string): FlightPlan => {
   };
 };
 
-function App() {
+function JALApp() {
   const [width] = useWindowSize();
   const [seatRank, setSeatRank] = React.useState<SeatRank>("普通席");
   const handleSelectSeatRank = (name: SeatRank) => {
@@ -106,4 +106,4 @@ function App() {
   );
 }
 
-export default App;
+export default JALApp;
