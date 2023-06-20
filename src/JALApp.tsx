@@ -1,4 +1,4 @@
-import { FareType, Flight, FlightPlan, SeatRank } from "./model.ts";
+import { FareType, Flight, FlightPlan, SeatRank, UserData } from "./model.ts";
 import React from "react";
 import { SeatRankSelector } from "./components/SeatRankSelector.tsx";
 import { AirportGraph } from "./components/AirportGraph.tsx";
@@ -8,6 +8,11 @@ import {
   FlightPlanCard,
   NewFlightPlanCard,
 } from "./components/FlightPlanCard.tsx";
+import { getFirestore, setDoc, doc } from "firebase/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { getAuth } from "firebase/auth";
+import useSWR from "swr";
+import { JALDB } from "./firebase.ts";
 
 const Center = (props: { children: React.ReactNode }) => {
   return (
@@ -32,12 +37,34 @@ const newDefaultFlightPlan = (title: string): FlightPlan => {
   };
 };
 
+const useUserData = () => {
+  const [user, loading, error] = useAuthState(getAuth());
+  const { data: userData, mutate } = useSWR(`/jal/${user?.uid}`, () => {
+    return JALDB.userData.get(user?.uid ?? "__unknown_user__");
+  });
+  const setUserData = async (userData: UserData) => {
+    if (!user) {
+      throw new Error("user is null");
+    }
+    mutate(
+      () => {
+        setDoc(doc(getFirestore(), "jal", user.uid), userData);
+        return userData;
+      },
+      {
+        optimisticData: userData,
+      }
+    );
+    console.log("finish mutate");
+  };
+  return { userData, setUserData, loading, error };
+};
+
 function JALApp() {
   const [width] = useWindowSize();
   const [seatRank, setSeatRank] = React.useState<SeatRank>("普通席");
   const handleSelectSeatRank = (name: SeatRank) => {
     setSeatRank(name);
-    console.log(name);
   };
 
   const [fareRate, setFareRate] = React.useState<FareType>("75%");
@@ -45,11 +72,18 @@ function JALApp() {
     setFareRate(rate);
   };
 
-  const [flightPlans, setFlightPlans] = React.useState<FlightPlan[]>([
-    newDefaultFlightPlan("新しい旅程"),
-  ]);
-  const handleClickNewFlightPlanButton = () => {
-    setFlightPlans([...flightPlans, newDefaultFlightPlan("新しい旅程")]); // FIXME title
+  const { userData, setUserData } = useUserData();
+  const flightPlans = userData?.flightPlans ?? [];
+
+  const handleClickNewFlightPlanButton = async () => {
+    if (!userData) {
+      throw new Error("userData is null in handleClickNewFlightPlanButton");
+    }
+    const flightPlans = [
+      ...userData.flightPlans,
+      newDefaultFlightPlan("新しい旅程"),
+    ];
+    await setUserData({ flightPlans }); // FIXME title
   };
 
   return (
@@ -67,24 +101,39 @@ function JALApp() {
           </Center>
         </div>
         <Center>
-          {flightPlans.map((flightPlan, flightPlanIndex) => {
-            const handleChange = (newFlight: Flight, flightIndex: number) => {
+          {(userData?.flightPlans ?? []).map((flightPlan, flightPlanIndex) => {
+            const handleChange = async (
+              newFlight: Flight,
+              flightIndex: number
+            ) => {
+              if (!userData) {
+                throw new Error("userData is null in handleChange");
+              }
               const newFlightPlan = { ...flightPlan };
               flightPlan.flights.splice(flightIndex, 1, newFlight);
-              flightPlans.splice(flightPlanIndex, 1, newFlightPlan);
-              setFlightPlans([...flightPlans]);
+              const newFlightPlans = [...flightPlans];
+              newFlightPlans.splice(flightPlanIndex, 1, newFlightPlan);
+              await setUserData({ flightPlans: newFlightPlans });
             };
-            const handleDelete = () => {
-              flightPlans.splice(flightPlanIndex, 1);
-              setFlightPlans([...flightPlans]);
+            const handleDelete = async () => {
+              const newFlightPlans = [...flightPlans];
+              newFlightPlans.splice(flightPlanIndex, 1);
+              await setUserData({ flightPlans: newFlightPlans });
             };
             const handleCreateFlight = () => {
-              flightPlan.flights.push(newDefaultFlight());
-              setFlightPlans([...flightPlans]);
+              const newFlightPlan = { ...flightPlan };
+              newFlightPlan.flights.push(newDefaultFlight());
+              setUserData({ flightPlans: [...flightPlans, newFlightPlan] });
             };
-            const handleDeleteFlight = (_flight: Flight, index: number) => {
-              flightPlan.flights.splice(index, 1);
-              setFlightPlans([...flightPlans]);
+            const handleDeleteFlight = async (
+              _flight: Flight,
+              index: number
+            ) => {
+              const newFlightPlan = { ...flightPlan };
+              newFlightPlan.flights.splice(index, 1);
+              const newFlightPlans = [...flightPlans];
+              newFlightPlans.splice(flightPlanIndex, 1, newFlightPlan);
+              await setUserData({ flightPlans: newFlightPlans });
             };
             return (
               <FlightPlanCard

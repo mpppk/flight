@@ -2,21 +2,7 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { useEffect } from "react";
 import "firebaseui/dist/firebaseui.css";
-import * as firebaseui from "firebaseui";
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyD5nLCEkTeMNbef7D_08qn8JI4CBTegFW8",
-  authDomain: "niboshi-flight.firebaseapp.com",
-  projectId: "niboshi-flight",
-  storageBucket: "niboshi-flight.appspot.com",
-  messagingSenderId: "964246248569",
-  appId: "1:964246248569:web:d8d7a3e0654d86bb2f48a8",
-  measurementId: "G-8M3YGY0NFL",
-};
-
-firebase.initializeApp(firebaseConfig);
+import { getFirebaseUI } from "./firebase.ts";
 
 // Configure FirebaseUI.
 const uiConfig = {
@@ -31,9 +17,7 @@ const uiConfig = {
 export const SignIn = () => {
   useEffect(() => {
     // Initialize the FirebaseUI Widget using Firebase.
-    const ui =
-      firebaseui.auth.AuthUI.getInstance() ||
-      new firebaseui.auth.AuthUI(firebase.auth());
+    const ui = getFirebaseUI();
     ui.start("#firebaseui-auth-container", uiConfig);
   });
   return (
