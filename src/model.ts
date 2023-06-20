@@ -88,9 +88,6 @@ export const getFOP = (
   if (fop === undefined)
     throw new Error(`FOP not found. from=${from}, to=${to}`);
   const [fareRate, bonus] = getFareRateAndBonus(fareType);
-  console.log(
-    `${fop} * (${seatRankAdditionalRate[seatRank]} + ${fareRate}) + ${bonus}`
-  );
   return Math.floor(
     fop * (seatRankAdditionalRate[seatRank] + fareRate) + bonus
   );
@@ -134,3 +131,7 @@ export interface FlightPlan {
 export const sumFlightPlanFOP = (flights: Flight[]) => {
   return flights.reduce((sum, flight) => sum + getFOPFromFlight(flight), 0);
 };
+
+export interface UserData {
+  flightPlans: FlightPlan[];
+}

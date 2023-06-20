@@ -96,7 +96,9 @@ export const FlightPlanCard = (props: {
             </Fragment>
           );
         })}
-        <NewFlightCard onClick={props.onCreateFlight} />
+        <div className="flex flex-wrap justify-center items-start h-full mt-2">
+          <NewFlightButton onClick={props.onCreateFlight} />
+        </div>
       </div>
     </div>
   );
@@ -106,12 +108,10 @@ export const NewFlightPlanCard = (props: { onClickNewButton: () => void }) => {
   return (
     <div className="mt-2 mx-2 card card-compact card-bordered bg-base-100 shadow-lg w-max">
       <div className="card-body">
-        {/*<SpaceBetween>*/}
         <button className="btn btn-wide" onClick={props.onClickNewButton}>
           新しい旅程を追加
           <PlusIcon />
         </button>
-        {/*</SpaceBetween>*/}
       </div>
     </div>
   );
@@ -187,16 +187,12 @@ const FlightCard = (props: {
   );
 };
 
-const NewFlightCard = (props: { onClick: () => void }) => {
+const NewFlightButton = (props: { onClick: () => void }) => {
   return (
-    <div className="card card-compact bg-base-100 shadow-lg">
-      <div className="card-body">
-        <button className="btn btn-wide" onClick={props.onClick}>
-          フライトを追加
-          <PlusIcon />
-        </button>
-      </div>
-    </div>
+    <button className="btn btn-wide" onClick={props.onClick}>
+      フライトを追加
+      <PlusIcon />
+    </button>
   );
 };
 
