@@ -13,6 +13,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import useSWR from "swr";
 import { JALDB } from "./firebase.ts";
+import { FlightPlanCardSkeleton } from "./components/FlightPlanCardSkeleton.tsx";
 
 const Center = (props: { children: React.ReactNode }) => {
   return (
@@ -101,6 +102,7 @@ function JALApp() {
           </Center>
         </div>
         <Center>
+          {!userData && <FlightPlanCardSkeleton />}
           {(userData?.flightPlans ?? []).map((flightPlan, flightPlanIndex) => {
             const handleChange = async (
               newFlight: Flight,
@@ -146,9 +148,11 @@ function JALApp() {
               />
             );
           })}
-          <NewFlightPlanCard
-            onClickNewButton={handleClickNewFlightPlanButton}
-          />
+          {userData && (
+            <NewFlightPlanCard
+              onClickNewButton={handleClickNewFlightPlanButton}
+            />
+          )}
         </Center>
       </div>
     </div>
