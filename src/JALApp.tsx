@@ -40,42 +40,88 @@ const newDefaultFlightPlan = (title: string): FlightPlan => {
   };
 };
 
+const emptyUserData: UserData = Object.freeze({
+  flightPlans: [],
+});
+let localUserData: UserData = {
+  flightPlans: [newDefaultFlightPlan("新しい旅程")],
+};
+
 type UserStatus = "signedIn" | "anonymous" | "loading";
 const useUserData = () => {
-  const [user, loadingAuthState, error] = useAuthState(getAuth());
-  const {
-    data: userData,
-    isLoading,
-    mutate,
-  } = useSWR(`/jal/${user?.uid}`, () => {
-    return JALDB.userData.get(user?.uid ?? "__unknown_user__");
-  });
-  const setUserData = async (userData: UserData) => {
-    if (!user) {
-      throw new Error("user is null");
-    }
-    mutate(
-      () => {
-        setDoc(doc(getFirestore(), "jal", user.uid), userData);
-        return userData;
-      },
-      {
-        optimisticData: userData,
-      }
-    );
-    console.log("finish mutate");
-  };
-
+  const [user, loadingAuthState, authError] = useAuthState(getAuth());
+  if (authError) {
+    throw authError;
+  }
   const userStatus = ((): UserStatus => {
-    if (isLoading) {
+    if (loadingAuthState) {
       return "loading";
     }
     return user ? "signedIn" : "anonymous";
   })();
+  const uid = (() => {
+    switch (userStatus) {
+      case "signedIn":
+        if (!user?.uid) {
+          throw new Error("uid is null");
+        }
+        return user.uid;
+      case "anonymous":
+        return "__local__";
+      case "loading":
+        return "__loading__";
+      default:
+        return unreachable(userStatus);
+    }
+  })();
+  const fetcher = () => {
+    switch (userStatus) {
+      case "signedIn":
+        return JALDB.userData.get(uid);
+      case "anonymous":
+        return { ...localUserData };
+      case "loading":
+        return emptyUserData;
+      default:
+        return unreachable(userStatus);
+    }
+  };
+  const key = `/jal/${uid}`;
+  const {
+    data: userData,
+    isLoading,
+    isValidating,
+    error,
+    mutate,
+  } = useSWR(key, fetcher);
+  const setUserData = async (userData: UserData) => {
+    if (loadingAuthState) {
+      throw new Error("user is now loading");
+    }
+    if (user) {
+      await mutate(
+        () => {
+          setDoc(doc(getFirestore(), "jal", user.uid), userData);
+          return userData;
+        },
+        {
+          optimisticData: userData,
+        }
+      );
+    } else {
+      localUserData = { ...userData };
+      await mutate(
+        { ...localUserData },
+        { optimisticData: { ...localUserData } }
+      );
+    }
+  };
+
   return {
     userData,
     setUserData,
-    isLoading: loadingAuthState || isLoading,
+    isDataLoading: isLoading,
+    isValidating,
     userStatus,
     error,
   };
@@ -114,7 +160,10 @@ function JALApp() {
     setFareRate(rate);
   };
 
-  const { userData, setUserData, userStatus } = useUserData();
+  const { userData, setUserData, userStatus, error } = useUserData();
+  if (error) {
+    throw error;
+  }
   const flightPlans = userData?.flightPlans ?? [];
 
   const handleClickNewFlightPlanButton = async () => {
@@ -175,10 +224,10 @@ function JALApp() {
               newFlightPlans.splice(flightPlanIndex, 1);
               await setUserData({ flightPlans: newFlightPlans });
             };
-            const handleCreateFlight = () => {
-              const newFlightPlan = { ...flightPlan };
-              newFlightPlan.flights.push(newDefaultFlight());
-              setUserData({ flightPlans: [...flightPlans, newFlightPlan] });
+            const handleCreateFlight = async () => {
+              const newFlightPlans = [...flightPlans];
+              newFlightPlans[flightPlanIndex].flights.push(newDefaultFlight());
+              await setUserData({ flightPlans: newFlightPlans });
             };
             const handleDeleteFlight = async (
               _flight: Flight,
@@ -201,7 +250,7 @@ function JALApp() {
               />
             );
           })}
-          {userStatus === "signedIn" && (
+          {userStatus !== "loading" && (
             <NewFlightPlanCard
               onClickNewButton={handleClickNewFlightPlanButton}
             />
