@@ -14,6 +14,8 @@ import { getAuth } from "firebase/auth";
 import useSWR from "swr";
 import { JALDB } from "./firebase.ts";
 import { FlightPlanCardSkeleton } from "./components/FlightPlanCardSkeleton.tsx";
+import { UserIcon } from "./components/icons.tsx";
+import { unreachable } from "./utils.ts";
 
 const Center = (props: { children: React.ReactNode }) => {
   return (
@@ -38,9 +40,14 @@ const newDefaultFlightPlan = (title: string): FlightPlan => {
   };
 };
 
+type UserStatus = "signedIn" | "anonymous" | "loading";
 const useUserData = () => {
-  const [user, loading, error] = useAuthState(getAuth());
-  const { data: userData, mutate } = useSWR(`/jal/${user?.uid}`, () => {
+  const [user, loadingAuthState, error] = useAuthState(getAuth());
+  const {
+    data: userData,
+    isLoading,
+    mutate,
+  } = useSWR(`/jal/${user?.uid}`, () => {
     return JALDB.userData.get(user?.uid ?? "__unknown_user__");
   });
   const setUserData = async (userData: UserData) => {
@@ -58,7 +65,41 @@ const useUserData = () => {
     );
     console.log("finish mutate");
   };
-  return { userData, setUserData, loading, error };
+
+  const userStatus = ((): UserStatus => {
+    if (isLoading) {
+      return "loading";
+    }
+    return user ? "signedIn" : "anonymous";
+  })();
+  return {
+    userData,
+    setUserData,
+    isLoading: loadingAuthState || isLoading,
+    userStatus,
+    error,
+  };
+};
+
+const UserOrSignInButton = (props: { userStatus: UserStatus }) => {
+  switch (props.userStatus) {
+    case "signedIn":
+      return (
+        <button className={"btn btn-square"}>
+          <UserIcon />
+        </button>
+      );
+    case "anonymous":
+      return <button className="btn btn-ghost"> ログイン・新規登録 </button>;
+    case "loading":
+      return (
+        <div className={"animate-pulse"}>
+          <div className={"h-10 bg-gray-200 rounded-full w-32"}></div>
+        </div>
+      );
+    default:
+      unreachable(props.userStatus);
+  }
 };
 
 function JALApp() {
@@ -73,11 +114,12 @@ function JALApp() {
     setFareRate(rate);
   };
 
-  const { userData, setUserData } = useUserData();
+  const { userData, setUserData, userStatus } = useUserData();
   const flightPlans = userData?.flightPlans ?? [];
 
   const handleClickNewFlightPlanButton = async () => {
-    if (!userData) {
+    if (userStatus !== "signedIn" || !userData) {
+      // anonymousでも追加できていい気もするけど、とりあえずはできないことにする
       throw new Error("userData is null in handleClickNewFlightPlanButton");
     }
     const flightPlans = [
@@ -89,8 +131,19 @@ function JALApp() {
 
   return (
     <div className="container mx-auto px-4 mt-2 mb-2">
-      <SeatRankSelector currentRank={seatRank} onClick={handleSelectSeatRank} />
-      <FareTypeSelector currentType={fareRate} onClick={handleSelectFareRate} />
+      <div className="flex flex-wrap justify-between items-center">
+        <div>
+          <SeatRankSelector
+            currentRank={seatRank}
+            onClick={handleSelectSeatRank}
+          />
+          <FareTypeSelector
+            currentType={fareRate}
+            onClick={handleSelectFareRate}
+          />
+        </div>
+        <UserOrSignInButton userStatus={userStatus} />
+      </div>
       <div>
         <div className={"mt-2"}>
           <Center>
@@ -102,7 +155,7 @@ function JALApp() {
           </Center>
         </div>
         <Center>
-          {!userData && <FlightPlanCardSkeleton />}
+          {userStatus === "loading" && <FlightPlanCardSkeleton />}
           {(userData?.flightPlans ?? []).map((flightPlan, flightPlanIndex) => {
             const handleChange = async (
               newFlight: Flight,
@@ -148,7 +201,7 @@ function JALApp() {
               />
             );
           })}
-          {userData && (
+          {userStatus === "signedIn" && (
             <NewFlightPlanCard
               onClickNewButton={handleClickNewFlightPlanButton}
             />

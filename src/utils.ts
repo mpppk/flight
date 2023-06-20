@@ -50,3 +50,8 @@ export class Graph<NodeValue, EdgeValue> {
     return set;
   }
 }
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function unreachable(_x: never): never {
+  throw new Error("unreachable");
+}
