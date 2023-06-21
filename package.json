@@ -17,7 +17,7 @@
     "test:unit": "vitest"
   },
   "dependencies": {
-    "daisyui": "3.1.1",
+    "daisyui": "3.1.5",
     "firebase": "^9.22.2",
     "firebaseui": "^6.0.2",
     "graphviz-react": "^1.2.5",
