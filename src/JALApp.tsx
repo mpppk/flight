@@ -14,6 +14,7 @@ import { JALDB } from "./firebase";
 import { FlightPlanCardSkeleton } from "./components/FlightPlanCardSkeleton";
 import { UserIcon } from "./components/icons";
 import { unreachable } from "./utils";
+import Link from "next/link";
 
 const Center = (props: { children: React.ReactNode }) => {
   return (
@@ -134,7 +135,11 @@ const UserOrSignInButton = (props: { userStatus: UserStatus }) => {
         </button>
       );
     case "anonymous":
-      return <button className="btn btn-ghost"> ログイン・新規登録 </button>;
+      return (
+        <Link href={"/signin"}>
+          <button className="btn btn-ghost"> ログイン・新規登録 </button>
+        </Link>
+      );
     case "loading":
       return (
         <div className={"animate-pulse"}>

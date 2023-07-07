@@ -7,8 +7,9 @@ import {
   FareType,
   getFOP,
   SeatRank,
-} from "../model.ts";
-import Graphviz from "graphviz-react";
+} from "@/model";
+import dynamic from "next/dynamic";
+const Graphviz = dynamic(() => import("graphviz-react"));
 
 export const AirportGraph = (props: {
   seatRank: SeatRank;
