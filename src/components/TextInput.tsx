@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { CheckIcon } from "./icons.tsx";
+import { CheckIcon } from "./icons";
 
 export const TextInput = (props: {
   text: string;

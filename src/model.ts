@@ -61,7 +61,7 @@ const newRouteMap = () => {
 };
 
 export const accessibleRoutes = (from: Airport): [Airport, number][] => {
-  return [...newRouteMap().getEdges(from).values()];
+  return Array.from(newRouteMap().getEdges(from).values());
 };
 
 export const accessibleAirports = (from: Airport): Airport[] => {

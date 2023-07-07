@@ -1,5 +1,5 @@
 import React, { Ref, useRef, useState } from "react";
-import { CheckIcon } from "./icons.tsx";
+import { CheckIcon } from "./icons";
 
 export const EditablePrice = (props: {
   price: number;

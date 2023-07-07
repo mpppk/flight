@@ -1,9 +1,9 @@
 "use client";
 
-import { AirportSelector } from "./AirportSelector.tsx";
-import { SeatRankSelector } from "./SeatRankSelector.tsx";
-import { FareTypeSelector } from "./FareTypeSelector.tsx";
-import { EditablePrice } from "./EditablePrice.tsx";
+import { AirportSelector } from "./AirportSelector";
+import { SeatRankSelector } from "./SeatRankSelector";
+import { FareTypeSelector } from "./FareTypeSelector";
+import { EditablePrice } from "./EditablePrice";
 import { Fragment, useState } from "react";
 import {
   accessibleAirports,
@@ -15,10 +15,10 @@ import {
   getFOPFromFlight,
   SeatRank,
   sumFlightPlanFOP,
-} from "../model.ts";
-import { EditIcon, PlusIcon, TrashIcon } from "./icons.tsx";
-import { EditableText } from "./Editable.tsx";
-import { SpaceBetween } from "./layout.tsx";
+} from "../model";
+import { EditIcon, PlusIcon, TrashIcon } from "./icons";
+import { EditableText } from "./Editable";
+import { SpaceBetween } from "./layout";
 
 export const FlightPlanCard = (props: {
   flightPlan: FlightPlan;

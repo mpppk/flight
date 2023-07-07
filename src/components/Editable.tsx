@@ -1,4 +1,4 @@
-import { TextInput } from "./TextInput.tsx";
+import { TextInput } from "./TextInput";
 import { ReactNode } from "react";
 
 export const EditableText = (props: {
