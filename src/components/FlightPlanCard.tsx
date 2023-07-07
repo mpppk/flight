@@ -1,3 +1,5 @@
+"use client";
+
 import { AirportSelector } from "./AirportSelector.tsx";
 import { SeatRankSelector } from "./SeatRankSelector.tsx";
 import { FareTypeSelector } from "./FareTypeSelector.tsx";

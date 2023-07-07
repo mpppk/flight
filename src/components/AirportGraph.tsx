@@ -1,3 +1,4 @@
+"use client";
 import { attribute as _, Node, Edge, toDot, Graph } from "ts-graphviz";
 import {
   Airport,

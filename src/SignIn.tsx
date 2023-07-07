@@ -1,8 +1,10 @@
+'use client'
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { useEffect } from "react";
 import "firebaseui/dist/firebaseui.css";
-import { getFirebaseUI } from "./firebase.ts";
+import {getFirebaseUI} from "@/firebase";
+
 
 // Configure FirebaseUI.
 const uiConfig = {
@@ -16,9 +18,10 @@ const uiConfig = {
 
 export const SignIn = () => {
   useEffect(() => {
-    // Initialize the FirebaseUI Widget using Firebase.
-    const ui = getFirebaseUI();
-    ui.start("#firebaseui-auth-container", uiConfig);
+    console.log('SignIn useEffect')
+    getFirebaseUI().then((ui) => {
+        ui.start("#firebaseui-auth-container", uiConfig);
+    })
   });
   return (
     <div className="relative flex flex-col justify-center h-screen overflow-hidden">

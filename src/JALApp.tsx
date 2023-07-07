@@ -1,3 +1,4 @@
+"use client";
 import { FareType, Flight, FlightPlan, SeatRank, UserData } from "./model.ts";
 import React from "react";
 import { SeatRankSelector } from "./components/SeatRankSelector.tsx";
