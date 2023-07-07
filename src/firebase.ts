@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { doc, getFirestore, getDoc } from "firebase/firestore";
@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 initializeApp(firebaseConfig);
 export const getFirebaseUI = async () => {
-  const firebaseui = await import("firebaseui")
+  const firebaseui = await import("firebaseui");
   return (
     firebaseui.auth.AuthUI.getInstance() ||
     new firebaseui.auth.AuthUI(getAuth())

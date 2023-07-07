@@ -27,7 +27,7 @@ export class Graph<NodeValue, EdgeValue> {
   }
 
   public getNodes(): NodeValue[] {
-    return [...this.nodes.values()];
+    return Array.from(this.nodes.values());
   }
 
   public addEdge(node1: NodeValue, node2: NodeValue, value: EdgeValue) {
@@ -37,7 +37,7 @@ export class Graph<NodeValue, EdgeValue> {
   }
 
   public getEdges(node: NodeValue) {
-    const edges = [...(this.edges.get(node) ?? new Map()).values()];
+    const edges = Array.from((this.edges.get(node) ?? new Map()).values());
     const set = new Set<[NodeValue, EdgeValue]>();
     edges.forEach((edge) => {
       if (edge.from !== node) {
@@ -51,7 +51,6 @@ export class Graph<NodeValue, EdgeValue> {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function unreachable(_x: never): never {
   throw new Error("unreachable");
 }

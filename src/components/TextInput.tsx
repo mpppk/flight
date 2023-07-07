@@ -9,7 +9,7 @@ export const TextInput = (props: {
 }) => {
   const inputEl = useRef<HTMLInputElement>(null);
   const handleChangeInput: React.ChangeEventHandler<HTMLInputElement> = (
-    event
+    event,
   ) => {
     props.onChange?.(event.target.value);
   };

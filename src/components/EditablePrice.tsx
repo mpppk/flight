@@ -48,7 +48,7 @@ const EditPrice = (props: {
   onBlur: () => void;
 }) => {
   const handleChangeInput: React.ChangeEventHandler<HTMLInputElement> = (
-    event
+    event,
   ) => {
     const price = parseInt(event.target.value, 10);
     props.onChangePrice(price);

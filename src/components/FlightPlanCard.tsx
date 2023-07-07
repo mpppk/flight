@@ -39,7 +39,7 @@ export const FlightPlanCard = (props: {
   const flightPlanFOPSum = sumFlightPlanFOP(props.flightPlan.flights);
   const priceSum = props.flightPlan.flights.reduce(
     (sum, flight) => flight.price + sum,
-    0
+    0,
   );
   return (
     <div className="mt-2 mx-2 card card-compact card-bordered bg-base-100 shadow-lg w-max">

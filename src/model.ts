@@ -82,14 +82,14 @@ export const getFOP = (
   from: string,
   to: string,
   seatRank: SeatRank,
-  fareType: FareType
+  fareType: FareType,
 ) => {
   const fop = FOPs.get(`${Airport.parse(from)}-${Airport.parse(to)}`);
   if (fop === undefined)
     throw new Error(`FOP not found. from=${from}, to=${to}`);
   const [fareRate, bonus] = getFareRateAndBonus(fareType);
   return Math.floor(
-    fop * (seatRankAdditionalRate[seatRank] + fareRate) + bonus
+    fop * (seatRankAdditionalRate[seatRank] + fareRate) + bonus,
   );
 };
 
