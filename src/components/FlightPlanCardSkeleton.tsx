@@ -1,5 +1,5 @@
-import { SpaceBetween } from "./layout.tsx";
-import { EditIcon, TrashIcon } from "./icons.tsx";
+import { SpaceBetween } from "./layout";
+import { EditIcon, TrashIcon } from "./icons";
 
 export const FlightPlanCardSkeleton = () => {
   return (

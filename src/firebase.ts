@@ -1,8 +1,8 @@
+"use client";
 import { initializeApp } from "firebase/app";
-import * as firebaseui from "firebaseui";
 import { getAuth } from "firebase/auth";
 import { doc, getFirestore, getDoc } from "firebase/firestore";
-import { UserData } from "./model.ts";
+import { UserData } from "./model";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD5nLCEkTeMNbef7D_08qn8JI4CBTegFW8",
@@ -15,8 +15,8 @@ const firebaseConfig = {
 };
 
 initializeApp(firebaseConfig);
-
-export const getFirebaseUI = () => {
+export const getFirebaseUI = async () => {
+  const firebaseui = await import("firebaseui");
   return (
     firebaseui.auth.AuthUI.getInstance() ||
     new firebaseui.auth.AuthUI(getAuth())

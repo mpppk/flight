@@ -1,5 +1,5 @@
 import React, { Ref, useRef, useState } from "react";
-import { CheckIcon } from "./icons.tsx";
+import { CheckIcon } from "./icons";
 
 export const EditablePrice = (props: {
   price: number;
@@ -48,7 +48,7 @@ const EditPrice = (props: {
   onBlur: () => void;
 }) => {
   const handleChangeInput: React.ChangeEventHandler<HTMLInputElement> = (
-    event
+    event,
   ) => {
     const price = parseInt(event.target.value, 10);
     props.onChangePrice(price);

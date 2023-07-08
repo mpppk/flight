@@ -1,4 +1,4 @@
-import { Airport, airports } from "../model.ts";
+import { Airport, airports } from "@/model";
 
 const AirportItem = (props: {
   name: Airport;

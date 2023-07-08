@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { CheckIcon } from "./icons.tsx";
+import { CheckIcon } from "./icons";
 
 export const TextInput = (props: {
   text: string;
@@ -9,7 +9,7 @@ export const TextInput = (props: {
 }) => {
   const inputEl = useRef<HTMLInputElement>(null);
   const handleChangeInput: React.ChangeEventHandler<HTMLInputElement> = (
-    event
+    event,
   ) => {
     props.onChange?.(event.target.value);
   };

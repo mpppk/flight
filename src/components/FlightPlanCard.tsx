@@ -1,7 +1,9 @@
-import { AirportSelector } from "./AirportSelector.tsx";
-import { SeatRankSelector } from "./SeatRankSelector.tsx";
-import { FareTypeSelector } from "./FareTypeSelector.tsx";
-import { EditablePrice } from "./EditablePrice.tsx";
+"use client";
+
+import { AirportSelector } from "./AirportSelector";
+import { SeatRankSelector } from "./SeatRankSelector";
+import { FareTypeSelector } from "./FareTypeSelector";
+import { EditablePrice } from "./EditablePrice";
 import { Fragment, useState } from "react";
 import {
   accessibleAirports,
@@ -13,10 +15,10 @@ import {
   getFOPFromFlight,
   SeatRank,
   sumFlightPlanFOP,
-} from "../model.ts";
-import { EditIcon, PlusIcon, TrashIcon } from "./icons.tsx";
-import { EditableText } from "./Editable.tsx";
-import { SpaceBetween } from "./layout.tsx";
+} from "../model";
+import { EditIcon, PlusIcon, TrashIcon } from "./icons";
+import { EditableText } from "./Editable";
+import { SpaceBetween } from "./layout";
 
 export const FlightPlanCard = (props: {
   flightPlan: FlightPlan;
@@ -37,7 +39,7 @@ export const FlightPlanCard = (props: {
   const flightPlanFOPSum = sumFlightPlanFOP(props.flightPlan.flights);
   const priceSum = props.flightPlan.flights.reduce(
     (sum, flight) => flight.price + sum,
-    0
+    0,
   );
   return (
     <div className="mt-2 mx-2 card card-compact card-bordered bg-base-100 shadow-lg w-max">

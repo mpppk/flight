@@ -1,21 +1,20 @@
-import { FareType, Flight, FlightPlan, SeatRank, UserData } from "./model.ts";
+"use client";
+import { FareType, Flight, FlightPlan, SeatRank, UserData } from "./model";
 import React from "react";
-import { SeatRankSelector } from "./components/SeatRankSelector.tsx";
-import { AirportGraph } from "./components/AirportGraph.tsx";
-import { useWindowSize } from "./hooks.ts";
-import { FareTypeSelector } from "./components/FareTypeSelector.tsx";
-import {
-  FlightPlanCard,
-  NewFlightPlanCard,
-} from "./components/FlightPlanCard.tsx";
+import { SeatRankSelector } from "./components/SeatRankSelector";
+import { AirportGraph } from "./components/AirportGraph";
+import { useWindowSize } from "./hooks";
+import { FareTypeSelector } from "./components/FareTypeSelector";
+import { FlightPlanCard, NewFlightPlanCard } from "./components/FlightPlanCard";
 import { getFirestore, setDoc, doc } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import useSWR from "swr";
-import { JALDB } from "./firebase.ts";
-import { FlightPlanCardSkeleton } from "./components/FlightPlanCardSkeleton.tsx";
-import { UserIcon } from "./components/icons.tsx";
-import { unreachable } from "./utils.ts";
+import { JALDB } from "./firebase";
+import { FlightPlanCardSkeleton } from "./components/FlightPlanCardSkeleton";
+import { UserIcon } from "./components/icons";
+import { unreachable } from "./utils";
+import Link from "next/link";
 
 const Center = (props: { children: React.ReactNode }) => {
   return (
@@ -106,13 +105,13 @@ const useUserData = () => {
         },
         {
           optimisticData: userData,
-        }
+        },
       );
     } else {
       localUserData = { ...userData };
       await mutate(
         { ...localUserData },
-        { optimisticData: { ...localUserData } }
+        { optimisticData: { ...localUserData } },
       );
     }
   };
@@ -136,7 +135,11 @@ const UserOrSignInButton = (props: { userStatus: UserStatus }) => {
         </button>
       );
     case "anonymous":
-      return <button className="btn btn-ghost"> ログイン・新規登録 </button>;
+      return (
+        <Link href={"/signin"}>
+          <button className="btn btn-ghost"> ログイン・新規登録 </button>
+        </Link>
+      );
     case "loading":
       return (
         <div className={"animate-pulse"}>
@@ -208,7 +211,7 @@ function JALApp() {
           {(userData?.flightPlans ?? []).map((flightPlan, flightPlanIndex) => {
             const handleChange = async (
               newFlight: Flight,
-              flightIndex: number
+              flightIndex: number,
             ) => {
               if (!userData) {
                 throw new Error("userData is null in handleChange");
@@ -231,7 +234,7 @@ function JALApp() {
             };
             const handleDeleteFlight = async (
               _flight: Flight,
-              index: number
+              index: number,
             ) => {
               const newFlightPlan = { ...flightPlan };
               newFlightPlan.flights.splice(index, 1);

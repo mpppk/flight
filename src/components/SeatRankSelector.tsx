@@ -1,4 +1,4 @@
-import { SeatRank, seatRanks } from "../model.ts";
+import { SeatRank, seatRanks } from "@/model";
 
 const SeatRankItem = (props: {
   name: SeatRank;
