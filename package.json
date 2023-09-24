@@ -16,7 +16,7 @@
     "test:unit": "vitest"
   },
   "dependencies": {
-    "@types/node": "20.6.3",
+    "@types/node": "20.6.4",
     "@types/react": "18.2.22",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.16",
