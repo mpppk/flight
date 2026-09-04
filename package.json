@@ -19,7 +19,7 @@
     "@types/node": "20.19.10",
     "@types/react": "18.3.23",
     "@types/react-dom": "18.3.7",
-    "autoprefixer": "10.4.21",
+    "autoprefixer": "10.5.5",
     "daisyui": "3.9.4",
     "encoding": "^0.1.13",
     "eslint": "8.57.1",
